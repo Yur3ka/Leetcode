@@ -12,8 +12,8 @@ class Solution:
         start = nums[0]
         for i in range(1,n):
             if nums[i] < start:
-                cur = (start - nums[i])*post_max[i]
-                ans = max(ans,cur)
+                temp = (start - nums[i])*post_max[i]
+                ans = max(ans,temp)
             else:
                 start = nums[i]
         return ans
