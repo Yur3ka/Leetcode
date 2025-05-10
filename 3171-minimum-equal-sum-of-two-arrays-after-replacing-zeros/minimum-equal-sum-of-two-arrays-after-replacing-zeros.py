@@ -7,17 +7,12 @@ class Solution:
         if zero1 == 0 and zero2 == 0:
             if sum1 == sum2:
                 return sum1
-            else:
-                return -1
         elif zero1 == 0:
             if sum1 >= sum2 + zero2:
                 return sum1
-            else:
-                return -1
         elif zero2 == 0:
             if sum2 >= sum1 + zero1: 
                 return sum2
-            else:
-                return -1
         else:
             return max(sum1+zero1,sum2+zero2)
+        return -1
