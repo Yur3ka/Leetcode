@@ -1,12 +1,6 @@
 class Solution:
     def removeTrailingZeros(self, num: str) -> str:
-        ans = []
-        temp = []
-        for char in num:
-            if char == '0':
-                temp.append(char)
-            else:
-                ans.extend(temp)
-                ans.append(char)
-                temp = []
-        return ''.join(ans)
+        for i in reversed(range(len(num))):
+            if num[i] != '0':
+                return num[:i+1]
+        return ''
