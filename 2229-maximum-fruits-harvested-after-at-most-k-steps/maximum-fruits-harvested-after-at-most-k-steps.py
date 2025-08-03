@@ -1,51 +1,46 @@
 class Solution:
     def maxTotalFruits(self, fruits: List[List[int]], startPos: int, k: int) -> int:
 
-        positions = [pos for pos, _ in fruits]
-        prefix = [0]
-        for _, amount in fruits:
-            prefix.append(prefix[-1] + amount)
-        
-        def range_sum(left: int, right: int) -> int:
-            return prefix[right] - prefix[left]
-
         ans = 0
+        positions = [pos for pos, _ in fruits]
 
+        # Chèn startPos nếu chưa có, để tính prefix đúng tại vị trí đó
+        curr = bisect_left(positions, startPos)
+        if curr >= len(fruits) or fruits[curr][0] != startPos:
+            fruits.insert(curr, [startPos, 0])
+            positions.insert(curr, startPos)
 
-        for x in range(len(fruits)):
-            left_pos = fruits[x][0]
-            if left_pos > startPos:
-                break
-            steps_left = startPos - left_pos
-            remain = k - 2 * steps_left
-            if remain < 0:
-                continue
-            right_limit = startPos + remain
-            y = bisect_right(positions, right_limit)
-            ans = max(ans, range_sum(x, y))
+        # Tính prefix sum số trái cây
+        pre_sum = [0]
+        s = 0
+        for _, amount in fruits:
+            s += amount
+            pre_sum.append(s)
 
+        # Tìm giới hạn trái và phải trong phạm vi k bước
+        left_idx = bisect_left(positions, startPos - k)
+        right_idx = bisect_right(positions, startPos + k)
 
-        for y in range(len(fruits)):
-            right_pos = fruits[y][0]
-            if right_pos < startPos:
-                continue
-            steps_right = right_pos - startPos
-            remain = k - 2 * steps_right
-            if remain < 0:
-                continue
-            left_limit = startPos - remain
-            x = bisect_left(positions, left_limit)
-            ans = max(ans, range_sum(x, y + 1))
+        # Đi trái trước rồi phải
+        for i in range(left_idx, curr + 1):
+            steps_left = startPos - positions[i]
+            remain_right = k - steps_left * 2
+            if remain_right < 0:
+                r_idx = curr
+            else:
+                r_idx = bisect_right(positions, startPos + remain_right)
+            temp_fruits = pre_sum[r_idx] - pre_sum[i]
+            ans = max(ans, temp_fruits)
 
-        left_limit = startPos - k
-        i = bisect_left(positions, left_limit)
-        j = bisect_right(positions, startPos)
-        ans = max(ans, range_sum(i, j))
-
-
-        right_limit = startPos + k
-        i = bisect_left(positions, startPos)
-        j = bisect_right(positions, right_limit)
-        ans = max(ans, range_sum(i, j))
+        # Đi phải trước rồi trái
+        for i in range(curr, right_idx):
+            steps_right = positions[i] - startPos
+            remain_left = k - steps_right * 2
+            if remain_left < 0:
+                l_idx = curr
+            else:
+                l_idx = bisect_left(positions, startPos - remain_left)
+            temp_fruits = pre_sum[i + 1] - pre_sum[l_idx]
+            ans = max(ans, temp_fruits)
 
         return ans
