@@ -2,14 +2,16 @@ class Solution:
     def minScoreTriangulation(self, values: List[int]) -> int:
         memo = {}
         n = len(values)
-        ans = float('inf')
+        # ans = float('inf')
         def dp(start,end,nums):
             if (start,end) in memo:
                 return memo[(start,end)]
             if end <= start+1:
                 return 0
             elif start + 2 == end:
-                return nums[start]*nums[start+1]*nums[end]
+                v = nums[start]*nums[start+1]*nums[end]
+                memo[(start,end)] = v
+                return v
             else:
                 v = float('inf')
                 for k in range(start+1,end):
