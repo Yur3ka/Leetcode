@@ -18,7 +18,7 @@ class NeighborSum:
         for dx, dy in self.adj:
             newx = row + dx
             newy = col + dy
-            print(newx,newy)
+            # print(newx,newy)
             if 0 <= newx < self.n and 0 <= newy < self.n:
                 ans += self.mat[newx][newy]
                 # print(self.mat[newx][newy])
