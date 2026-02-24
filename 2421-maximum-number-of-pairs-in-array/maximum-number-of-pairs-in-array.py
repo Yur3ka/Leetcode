@@ -1,8 +1,10 @@
 class Solution:
     def numberOfPairs(self, nums: List[int]) -> List[int]:
+        
         c = Counter(nums)
-        pair = 0
-        n = len(nums)
+        pairs = 0
+        left_over = 0
         for k,v in c.items():
-            pair += v//2
-        return [pair,n-pair*2]
+            pairs += v//2
+            left_over += v%2
+        return [pairs, left_over]
